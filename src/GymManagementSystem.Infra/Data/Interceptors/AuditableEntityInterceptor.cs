@@ -32,7 +32,7 @@ public class AuditableEntityInterceptor(IUserContext userContext) : SaveChangesI
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedBy = userContext.UserId;
-                    entry.Entity.CreatedByName = userContext.UserName;
+                    entry.Entity.CreatedByName = userContext.Name;
                     entry.Entity.CreatedAt = now;
                 }
                 if (userContext.UserId != null) entry.Entity.LastModifiedBy = userContext.UserId;

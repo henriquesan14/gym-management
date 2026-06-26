@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <Folder Include="Members\Specifications\" />
+    <Folder Include="Users\Rules\" />
   </ItemGroup>
 
 </Project>

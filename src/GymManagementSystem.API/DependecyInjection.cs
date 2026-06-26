@@ -1,6 +1,8 @@
 ﻿using Carter;
+using GymManagementSystem.API.ErrorHandling;
 using GymManagementSystem.API.Extensions;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using GymManagementSystem.API.Services;
+using GymManagementSystem.Domain.Users.Contracts;
 using Scalar.AspNetCore;
 
 namespace GymManagementSystem.API;
@@ -21,10 +23,10 @@ public static class DependencyInjection
         services.AddOpenApi();
         //services.AddCorsConfig(builder.Environment);
         services.AddJsonSerializationConfig();
-        //services.AddAuthConfig(configuration, builder.Environment);
+        services.AddAuthConfig(configuration, builder.Environment);
 
         services.AddHttpContextAccessor();
-        //services.AddScoped<IUserContext, UserContext>();
+        services.AddScoped<IUserContext, UserContext>();
 
         //services.AddHangfireConfig(configuration);
 
@@ -36,10 +38,10 @@ public static class DependencyInjection
         //     options.SuppressModelStateInvalidFilter = true;
         // });
 
-        //services.AddExceptionHandler<CustomExceptionHandler>();
+        services.AddExceptionHandler<CustomExceptionHandler>();
 
         //services.AddHealthChecks()
-            //.AddNpgSql(configuration.GetConnectionString("DbConnection")!);
+        //.AddNpgSql(configuration.GetConnectionString("DbConnection")!);
 
         //services.AddRateLimitingConfig(builder.Configuration);
 
@@ -67,11 +69,7 @@ public static class DependencyInjection
         app.UseAuthentication();
         app.UseAuthorization();
 
-        //app.MapControllers();
-
         app.MapCarter();
-
-        //app.UseSwaggerDocs();
 
         //app.UseIpRateLimiting();
 

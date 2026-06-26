@@ -5,7 +5,6 @@ using GymManagementSystem.API.Requests;
 using GymManagementSystem.Application.Members.Commands.CreateMember;
 using GymManagementSystem.Application.Members.Commands.CreateMembership;
 using GymManagementSystem.Application.Members.Queries.GetMembers;
-using GymManagementSystem.Domain.Members;
 using MediatR;
 
 namespace GymManagementSystem.API.Endpoints;
@@ -14,7 +13,7 @@ public class MemberModule : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/members");
+        var group = app.MapGroup("/api/members").RequireAuthorization();
 
         group.MapPost("/", Create);
         group.MapGet("/", Get);

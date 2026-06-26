@@ -1,5 +1,6 @@
 using GymManagementSystem.Application.Members;
 using GymManagementSystem.Application.Shared.Contracts;
+using GymManagementSystem.Application.Users;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace GymManagementSystem.Infra.Data;
@@ -9,13 +10,15 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     private IDbContextTransaction _transaction;
     private readonly GymManagementDbContext _dbContext;
 
-    public UnitOfWork(GymManagementDbContext dbContext, IMemberRepository members)
+    public UnitOfWork(GymManagementDbContext dbContext, IMemberRepository members, IUserRepository users)
     {
         _dbContext = dbContext;
         Members = members;
+        Users = users;
     }
 
     public IMemberRepository Members { get; }
+    public IUserRepository Users { get; }
 
     public async Task BeginTransaction()
     {

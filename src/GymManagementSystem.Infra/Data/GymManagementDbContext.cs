@@ -1,4 +1,5 @@
 ﻿using GymManagementSystem.Domain.Members;
+using GymManagementSystem.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
@@ -11,8 +12,10 @@ public class GymManagementDbContext : DbContext
     {
     }
 
-    public DbSet<Member> Tenants => Set<Member>();
-    public DbSet<Membership> Clients => Set<Membership>();
+    public DbSet<Member> Members => Set<Member>();
+    public DbSet<Membership> Memberships => Set<Membership>();
+    public DbSet<User> Users => Set<User>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

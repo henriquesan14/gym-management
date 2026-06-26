@@ -9,8 +9,8 @@ public class Member : Aggregate<MemberId>
 {
     private readonly List<Membership> _memberships = [];
 
-    public string FullName { get; private set; }
-    public Email Email { get; private set; }
+    public string FullName { get; private set; } = default!;
+    public Email Email { get; private set; } = default!;
 
     public IReadOnlyCollection<Membership> Memberships =>
         _memberships.AsReadOnly();
