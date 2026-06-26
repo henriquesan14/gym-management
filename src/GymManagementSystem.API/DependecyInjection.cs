@@ -1,4 +1,5 @@
-﻿using GymManagementSystem.API.Extensions;
+﻿using Carter;
+using GymManagementSystem.API.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
 
@@ -27,11 +28,13 @@ public static class DependencyInjection
 
         //services.AddHangfireConfig(configuration);
 
-        builder.Services.AddControllers()
-         .ConfigureApiBehaviorOptions(options =>
-         {
-             options.SuppressModelStateInvalidFilter = true;
-         });
+        services.AddCarter();
+
+        //builder.Services.AddControllers()
+        // .ConfigureApiBehaviorOptions(options =>
+        // {
+        //     options.SuppressModelStateInvalidFilter = true;
+        // });
 
         //services.AddExceptionHandler<CustomExceptionHandler>();
 
@@ -64,7 +67,9 @@ public static class DependencyInjection
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapControllers();
+        //app.MapControllers();
+
+        app.MapCarter();
 
         //app.UseSwaggerDocs();
 
