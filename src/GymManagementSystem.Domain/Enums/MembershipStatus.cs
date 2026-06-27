@@ -3,6 +3,7 @@
 public enum MembershipStatus
 {
     Active,
+    GracePeriod,
     Cancelled,
     Expired
 }

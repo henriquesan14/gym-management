@@ -27,6 +27,14 @@ public class Membership : Entity<MembershipId>, IAuditableEntity
         Status = MembershipStatus.Active;
     }
 
+    public void EnterGracePeriod()
+    {
+        if (Status != MembershipStatus.Active)
+            return;
+
+        Status = MembershipStatus.GracePeriod;
+    }
+
     public void Cancel()
     {
         if (Status == MembershipStatus.Cancelled)
@@ -36,15 +44,15 @@ public class Membership : Entity<MembershipId>, IAuditableEntity
 
     public void Expire()
     {
-        if (Status != MembershipStatus.Active)
+        if (Status != MembershipStatus.GracePeriod)
             return;
         Status = MembershipStatus.Expired;
     }
 
     public void Renew(int months)
     {
-        if (Status == MembershipStatus.Cancelled)
-            throw new DomainException("Cannot renew a cancelled membership.");
+        if (Status == MembershipStatus.Cancelled || Status == MembershipStatus.Expired)
+            throw new DomainException("Cannot renew a cancelled/expired membership.");
 
         EndDate = EndDate.AddMonths(months);
     }

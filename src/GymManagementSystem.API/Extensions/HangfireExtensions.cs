@@ -28,7 +28,7 @@ public static class HangfireExtensions
     {
         app.UseHangfireDashboard("/hangfire", new DashboardOptions
         {
-            Authorization = new[] { new CookieAuthDashboardFilter() }
+            //Authorization = new[] { new CookieAuthDashboardFilter() }
         });
 
         return app;

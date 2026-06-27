@@ -52,6 +52,18 @@ public class Member : Aggregate<MemberId>, IAuditableEntity
         return membership;
     }
 
+    public void EnterMembershipGracePeriod(MembershipId membershipId)
+    {
+        var membership = _memberships
+            .Single(x => x.Id == membershipId);
+
+        membership.EnterGracePeriod();
+
+        AddDomainEvent(new MembershipEnteredGracePeriodDomainEvent(
+            Id,
+            membership.Id));
+    }
+
     public void RenewMembership(int months)
     {
         var membership = GetActiveMembership();
