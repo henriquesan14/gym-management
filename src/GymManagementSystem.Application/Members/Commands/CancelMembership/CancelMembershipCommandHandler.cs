@@ -3,23 +3,24 @@ using GymManagementSystem.Domain.Members.Specifications;
 using GymManagementSystem.Shared.Common.CRQS;
 using GymManagementSystem.Shared.Common.ResultPattern;
 
-namespace GymManagementSystem.Application.Members.Commands.RenewMembership;
+namespace GymManagementSystem.Application.Members.Commands.CancelMembership;
 
-public class RenewMembershipCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<RenewMembershipCommand, Result>
+public class CancelMembershipCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<CancelMembershipCommand, Result>
 {
-    public async Task<Result> Handle(RenewMembershipCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CancelMembershipCommand request, CancellationToken cancellationToken)
     {
         var member = await unitOfWork.Members.SingleOrDefaultAsync(new MemberByIdWithMembershipsSpecification(request.MemberId));
 
         if (member is null)
             return MemberErrors.NotFound(request.MemberId);
 
-        var membership = member.GetActiveMembership();
+        var membership = member.Memberships
+            .FirstOrDefault(x => x.Id.Value == request.MembershipId);
 
         if (membership is null)
-            return MemberErrors.WithoutActiveMembership();
+            return MembershipErrors.NotFound(request.MembershipId);
 
-        membership.Renew(request.Months);
+        membership.Cancel();
 
         await unitOfWork.CompleteAsync();
 

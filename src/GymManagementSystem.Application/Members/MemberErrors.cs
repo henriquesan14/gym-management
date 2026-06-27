@@ -9,7 +9,7 @@ public static class MemberErrors
     public static Error Conflict(string email) =>
         Error.Conflict("Member.Conflict", $"Member with Email: {email} already exists");
 
-    public static Error WithouActiveMembership() =>
+    public static Error WithoutActiveMembership() =>
         Error.Conflict("Member.Conflict", $"Member doesn't have an Active Membership");
 
     public static Error CreateFailure =>
