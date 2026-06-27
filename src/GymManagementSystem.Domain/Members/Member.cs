@@ -52,12 +52,35 @@ public class Member : Aggregate<MemberId>, IAuditableEntity
         return membership;
     }
 
+    public void RenewMembership(int months)
+    {
+        var membership = GetActiveMembership();
+
+        if (membership is null) throw new DomainException("There are no Active Membership");
+
+        membership.Renew(months);
+    }
+
     public void CancelMembership(MembershipId membershipId)
     {
         var membership = _memberships
             .Single(x => x.Id == membershipId);
 
+        if (membership is null) throw new DomainException("Membership not exists");
+
         membership.Cancel();
+    }
+
+    public void ExpireMembership(MembershipId membershipId)
+    {
+        var membership = _memberships.SingleOrDefault(x => x.Id == membershipId);
+
+        if (membership is null)
+            throw new DomainException("Membership not found.");
+
+        membership.Expire();
+
+        AddDomainEvent(new MembershipExpiredDomainEvent(Id, membership.Id));
     }
 
     public Membership? GetActiveMembership()

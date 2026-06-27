@@ -1,4 +1,5 @@
 ﻿using GymManagementSystem.Application.Shared.Contracts;
+using GymManagementSystem.Domain.Members;
 using GymManagementSystem.Domain.Members.Specifications;
 using GymManagementSystem.Shared.Common.CRQS;
 using GymManagementSystem.Shared.Common.ResultPattern;
@@ -14,13 +15,7 @@ public class CancelMembershipCommandHandler(IUnitOfWork unitOfWork) : ICommandHa
         if (member is null)
             return MemberErrors.NotFound(request.MemberId);
 
-        var membership = member.Memberships
-            .FirstOrDefault(x => x.Id.Value == request.MembershipId);
-
-        if (membership is null)
-            return MembershipErrors.NotFound(request.MembershipId);
-
-        membership.Cancel();
+        member.CancelMembership(MembershipId.Of(request.MembershipId));
 
         await unitOfWork.CompleteAsync();
 

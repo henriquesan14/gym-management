@@ -1,5 +1,6 @@
 ﻿using GymManagementSystem.API.Filters;
 using GymManagementSystem.Application.Auth;
+using GymManagementSystem.Application.Members;
 using Hangfire;
 using Hangfire.PostgreSql;
 
@@ -40,6 +41,10 @@ public static class HangfireExtensions
             service => service.CleanupExpiredAndRevokedTokensAsync(),
             Cron.Daily);
 
+        RecurringJob.AddOrUpdate<IMembershipExpirationBackgroundService>(
+            "ProcessMemberships",
+            service => service.ProcessMemberships(new CancellationToken()),
+            Cron.Daily);
 
         return app;
     }

@@ -14,12 +14,7 @@ public class RenewMembershipCommandHandler(IUnitOfWork unitOfWork) : ICommandHan
         if (member is null)
             return MemberErrors.NotFound(request.MemberId);
 
-        var membership = member.GetActiveMembership();
-
-        if (membership is null)
-            return MemberErrors.WithoutActiveMembership();
-
-        membership.Renew(request.Months);
+        member.RenewMembership(request.Months);
 
         await unitOfWork.CompleteAsync();
 

@@ -10,7 +10,7 @@ public class Membership : Entity<MembershipId>, IAuditableEntity
     public DateOnly EndDate { get; private set; }
     public MembershipStatus Status { get; private set; }
 
-    public bool IsActive => Status == MembershipStatus.Active;
+    public bool IsActive => Status == MembershipStatus.Active && EndDate >= DateOnly.FromDateTime(DateTime.Now);
 
     private Membership()
     {
@@ -36,6 +36,8 @@ public class Membership : Entity<MembershipId>, IAuditableEntity
 
     public void Expire()
     {
+        if (Status != MembershipStatus.Active)
+            return;
         Status = MembershipStatus.Expired;
     }
 
