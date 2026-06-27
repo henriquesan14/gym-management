@@ -38,7 +38,7 @@ public static class DependencyInjection
 
         //Services
         services.AddScoped<ITokenService, TokenService>();
-        //services.AddScoped<ITokenCleanupService, TokenCleanupService>();
+        services.AddScoped<ITokenCleanupService, TokenCleanupService>();
         //services.AddScoped<ISubscriptionsJobService, SubscriptionsJobService>();
         //services.AddScoped<IEmailSender, SendGridEmailSender>();
         //services.AddScoped<IEmailService, EmailService>();

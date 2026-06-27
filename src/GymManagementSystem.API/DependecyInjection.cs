@@ -1,8 +1,11 @@
-﻿using Carter;
+﻿using AspNetCoreRateLimit;
+using Carter;
 using GymManagementSystem.API.ErrorHandling;
 using GymManagementSystem.API.Extensions;
 using GymManagementSystem.API.Services;
 using GymManagementSystem.Domain.Users.Contracts;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
 
 namespace GymManagementSystem.API;
@@ -21,29 +24,23 @@ public static class DependencyInjection
     public static IServiceCollection AddApiServices(this IServiceCollection services, WebApplicationBuilder builder, IConfiguration configuration)
     {
         services.AddOpenApi();
-        //services.AddCorsConfig(builder.Environment);
+        services.AddCorsConfig(builder.Environment);
         services.AddJsonSerializationConfig();
         services.AddAuthConfig(configuration, builder.Environment);
 
         services.AddHttpContextAccessor();
         services.AddScoped<IUserContext, UserContext>();
 
-        //services.AddHangfireConfig(configuration);
+        services.AddHangfireConfig(configuration);
 
         services.AddCarter();
 
-        //builder.Services.AddControllers()
-        // .ConfigureApiBehaviorOptions(options =>
-        // {
-        //     options.SuppressModelStateInvalidFilter = true;
-        // });
-
         services.AddExceptionHandler<CustomExceptionHandler>();
 
-        //services.AddHealthChecks()
-        //.AddNpgSql(configuration.GetConnectionString("DbConnection")!);
+        services.AddHealthChecks()
+        .AddNpgSql(configuration.GetConnectionString("DbConnection")!);
 
-        //services.AddRateLimitingConfig(builder.Configuration);
+        services.AddRateLimitingConfig(builder.Configuration);
 
         return services;
     }
@@ -71,15 +68,15 @@ public static class DependencyInjection
 
         app.MapCarter();
 
-        //app.UseIpRateLimiting();
+        app.UseIpRateLimiting();
 
-        //app.UseHangfireDashboardWithAuth(configuration);
-        //app.UseRecurringJobs();
+        app.UseHangfireDashboardWithAuth(configuration);
+        app.UseRecurringJobs();
 
-        //app.UseHealthChecks("/health", new HealthCheckOptions
-        //{
-            //ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-        //});
+        app.UseHealthChecks("/health", new HealthCheckOptions
+        {
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
 
         return app;
     }
