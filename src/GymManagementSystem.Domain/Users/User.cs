@@ -5,7 +5,7 @@ using GymManagementSystem.Domain.ValueObjects;
 
 namespace GymManagementSystem.Domain.Users;
 
-public class User : Aggregate<UserId>
+public class User : Aggregate<UserId>, IAuditableEntity
 {
     private User()
     {

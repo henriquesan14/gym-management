@@ -5,7 +5,7 @@ using GymManagementSystem.Domain.ValueObjects;
 
 namespace GymManagementSystem.Domain.Members;
 
-public class Member : Aggregate<MemberId>
+public class Member : Aggregate<MemberId>, IAuditableEntity
 {
     private readonly List<Membership> _memberships = [];
 

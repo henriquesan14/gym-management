@@ -1,4 +1,5 @@
 using GymManagementSystem.Domain.Members;
+using GymManagementSystem.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,17 +23,14 @@ public class MemberConfiguration : IEntityTypeConfiguration<Member>
             .IsRequired()
             .HasMaxLength(200);
 
-        // Email is a value object mapped to a single column with a unique index.
-        builder.OwnsOne(m => m.Email, email =>
-        {
-            email.Property(e => e.Value)
-                .HasColumnName("Email")
-                .IsRequired()
-                .HasMaxLength(256);
+        builder.Property(u => u.Email)
+            .HasConversion(
+                e => e.Value,
+                v => Email.Of(v))
+            .HasColumnName("Email");
 
-            email.HasIndex(e => e.Value)
-                .IsUnique();
-        });
+        builder.HasIndex(m => m.Email)
+            .IsUnique();
 
         // Member is the aggregate root; Memberships is a private backing-field collection.
         builder.HasMany(m => m.Memberships)

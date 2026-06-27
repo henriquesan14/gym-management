@@ -1,4 +1,5 @@
 ﻿using GymManagementSystem.Domain.Users;
+using GymManagementSystem.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -31,16 +32,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(50);
 
-        builder.OwnsOne(u => u.Email, email =>
-        {
-            email.Property(e => e.Value)
-                .HasColumnName("Email")
-                .IsRequired()
-                .HasMaxLength(256);
+        builder.Property(u => u.Email)
+            .HasConversion(
+                e => e.Value,
+                v => Email.Of(v))
+            .HasColumnName("Email");
 
-            email.HasIndex(e => e.Value)
-                .IsUnique();
-        });
+        builder.HasIndex(m => m.Email)
+            .IsUnique();
 
         builder.Metadata
             .FindNavigation(nameof(User.RefreshTokens))!

@@ -21,6 +21,7 @@ public static class DependencyInjection
     {
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, AuditInterceptor>();
         var connectionString = configuration.GetConnectionString("DbConnection");
 
         services.AddDbContext<GymManagementDbContext>((sp, options) =>

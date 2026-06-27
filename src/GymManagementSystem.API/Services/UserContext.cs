@@ -57,7 +57,7 @@ public class UserContext : IUserContext
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.None,
-            Expires = DateTime.UtcNow.AddHours(1)
+            Expires = DateTime.Now.AddHours(1)
         });
 
         httpContext.Response.Cookies.Append("refresh_token", refreshToken, new CookieOptions
@@ -65,7 +65,7 @@ public class UserContext : IUserContext
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.None,
-            Expires = DateTime.UtcNow.AddDays(7)
+            Expires = DateTime.Now.AddDays(7)
         });
     }
 
