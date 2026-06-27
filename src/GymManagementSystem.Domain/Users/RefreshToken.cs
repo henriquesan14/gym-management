@@ -2,7 +2,7 @@
 
 namespace GymManagementSystem.Domain.Users;
 
-public class RefreshToken : Entity<RefreshTokenId>
+public class RefreshToken : Aggregate<RefreshTokenId>
 {
     public string Token { get; set; } = Guid.NewGuid().ToString();
     public UserId UserId { get; private set; } = default!;

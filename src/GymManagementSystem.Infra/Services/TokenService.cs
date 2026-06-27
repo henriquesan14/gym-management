@@ -14,7 +14,7 @@ public class TokenService(IConfiguration _configuration) : ITokenService
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_configuration["TokenSettings:Secret"]!);
-        var accessTokenExpiration = DateTime.Now.AddHours(1);
+        var accessTokenExpiration = DateTime.Now.AddMinutes(15);
         var refreshTokenExpiration = DateTime.Now.AddDays(7);
 
         var claims = new List<Claim>

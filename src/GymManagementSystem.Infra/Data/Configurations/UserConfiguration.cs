@@ -42,11 +42,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
                 .IsUnique();
         });
 
-        builder.HasMany(u => u.RefreshTokens)
-            .WithOne()
-            .HasForeignKey("UserId")
-            .OnDelete(DeleteBehavior.Cascade);
-
         builder.Metadata
             .FindNavigation(nameof(User.RefreshTokens))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);

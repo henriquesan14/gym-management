@@ -2,7 +2,7 @@
 
 namespace GymManagementSystem.Domain.Users.Specifications;
 
-public class UserByEmailSpecification : Specification<User>
+public class UserByEmailSpecification : SingleResultSpecification<User>
 {
     public UserByEmailSpecification(string email)
     {

@@ -1,3 +1,4 @@
+using GymManagementSystem.Application.Auth;
 using GymManagementSystem.Application.Members;
 using GymManagementSystem.Application.Shared.Contracts;
 using GymManagementSystem.Application.Users;
@@ -7,18 +8,20 @@ namespace GymManagementSystem.Infra.Data;
 
 public class UnitOfWork : IUnitOfWork, IDisposable
 {
-    private IDbContextTransaction _transaction;
+    private IDbContextTransaction _transaction = default!;
     private readonly GymManagementDbContext _dbContext;
 
-    public UnitOfWork(GymManagementDbContext dbContext, IMemberRepository members, IUserRepository users)
+    public UnitOfWork(GymManagementDbContext dbContext, IMemberRepository members, IUserRepository users, IRefreshTokenRepository refreshTokens)
     {
         _dbContext = dbContext;
         Members = members;
         Users = users;
+        RefreshTokens = refreshTokens;
     }
 
     public IMemberRepository Members { get; }
     public IUserRepository Users { get; }
+    public IRefreshTokenRepository RefreshTokens { get; }
 
     public async Task BeginTransaction()
     {

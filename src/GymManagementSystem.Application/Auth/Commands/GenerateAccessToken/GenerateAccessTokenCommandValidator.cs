@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace GymManagementSystem.Application.Auth.GenerateAccessToken;
+namespace GymManagementSystem.Application.Auth.Commands.GenerateAccessToken;
 
 public class GenerateAccessTokenCommandValidator : AbstractValidator<GenerateAccessTokenCommand>
 {

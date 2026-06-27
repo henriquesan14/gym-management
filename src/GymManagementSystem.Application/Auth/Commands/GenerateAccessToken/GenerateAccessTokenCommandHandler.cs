@@ -1,9 +1,10 @@
 ﻿using GymManagementSystem.Application.Shared.Contracts;
+using GymManagementSystem.Domain.Users;
 using GymManagementSystem.Domain.Users.Contracts;
 using GymManagementSystem.Shared.Common.CRQS;
 using GymManagementSystem.Shared.Common.ResultPattern;
 
-namespace GymManagementSystem.Application.Auth.GenerateAccessToken;
+namespace GymManagementSystem.Application.Auth.Commands.GenerateAccessToken;
 
 public class GenerateAccessTokenCommandHandler(IUnitOfWork unitOfWork, ITokenService tokenService,
     IPasswordCheck passwordCheck, IUserContext userContext) : ICommandHandler<GenerateAccessTokenCommand, ResultT<AuthResponse>>
@@ -18,7 +19,18 @@ public class GenerateAccessTokenCommandHandler(IUnitOfWork unitOfWork, ITokenSer
 
         var tokenResponse = tokenService.GenerateAccessToken(user);
 
-        userContext.SetCookieTokens(tokenResponse.AccessToken, tokenResponse.AccessToken);
+        var refreshToken = new RefreshToken(
+            RefreshTokenId.Of(Guid.NewGuid()),
+            tokenResponse.RefreshToken,
+            UserId.Of(user.Id.Value),
+            userContext.IpAddress!,
+            tokenResponse.RefreshTokenExpiresAt
+        );
+
+        await unitOfWork.RefreshTokens.AddAsync(refreshToken);
+        await unitOfWork.CompleteAsync();
+
+        userContext.SetCookieTokens(tokenResponse.AccessToken, tokenResponse.RefreshToken);
 
         var authResponse = new AuthResponse(user.Id.Value, user.Name, user.Role);
 
