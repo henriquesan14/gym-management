@@ -59,4 +59,9 @@ public class Member : Aggregate<MemberId>, IAuditableEntity
 
         membership.Cancel();
     }
+
+    public Membership? GetActiveMembership()
+    {
+        return this.Memberships.FirstOrDefault(m => m.IsActive);
+    }
 }

@@ -1,9 +1,10 @@
 ﻿using GymManagementSystem.Domain.Abstractions;
 using GymManagementSystem.Domain.Enums;
+using GymManagementSystem.Domain.Exceptions;
 
 namespace GymManagementSystem.Domain.Members;
 
-public class Membership : Entity<MembershipId>
+public class Membership : Entity<MembershipId>, IAuditableEntity
 {
     public DateOnly StartDate { get; private set; }
     public DateOnly EndDate { get; private set; }
@@ -26,13 +27,23 @@ public class Membership : Entity<MembershipId>
         Status = MembershipStatus.Active;
     }
 
-    internal void Cancel()
+    public void Cancel()
     {
+        if (Status == MembershipStatus.Cancelled)
+            return;
         Status = MembershipStatus.Cancelled;
     }
 
-    internal void Expire()
+    public void Expire()
     {
         Status = MembershipStatus.Expired;
+    }
+
+    public void Renew(int months)
+    {
+        if (Status == MembershipStatus.Cancelled)
+            throw new DomainException("Cannot renew a cancelled membership.");
+
+        EndDate = EndDate.AddMonths(months);
     }
 }
