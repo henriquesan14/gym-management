@@ -45,14 +45,10 @@ public static class AuthExtensions
             };
         });
 
-        //services.AddAuthorization(options =>
-        //{
-        //    foreach (var role in Enum.GetValues<UserRoleEnum>())
-        //    {
-        //        options.AddPolicy(role.ToString(), policy =>
-        //            policy.RequireClaim(ClaimTypes.Role, role.ToString()));
-        //    }
-        //});
+        services.AddAuthorization(options =>
+        {
+            
+        });
 
         return services;
     }

@@ -7,6 +7,7 @@ using GymManagementSystem.Application.Members.Commands.CreateMember;
 using GymManagementSystem.Application.Members.Commands.CreateMembership;
 using GymManagementSystem.Application.Members.Commands.DeleteMember;
 using GymManagementSystem.Application.Members.Commands.RenewMembership;
+using GymManagementSystem.Application.Members.Queries.GetMemberMembership;
 using GymManagementSystem.Application.Members.Queries.GetMembers;
 using MediatR;
 
@@ -24,6 +25,7 @@ public class MemberModule : ICarterModule
         group.MapPost("/{memberId}/memberships", CreateMembership);
         group.MapPost("/{memberId}/memberships/renew", RenewMembership);
         group.MapPost("/{memberId}/memberships/{membershipId}/cancel", CancelMembership);
+        group.MapGet("/{memberId}/memberships/", GetMemberMembership);
     }
 
     private static async Task<IResult> Create(
@@ -102,6 +104,18 @@ public class MemberModule : ICarterModule
         var command = new CancelMembershipCommand(memberId, membershipId);
 
         var result = await sender.Send(command, ct);
+
+        return result.ToHttpResult();
+    }
+
+    private static async Task<IResult> GetMemberMembership(
+        Guid memberId,
+        ISender sender,
+        CancellationToken ct)
+    {
+        var query = new GetMemberMembershipQuery(memberId);
+
+        var result = await sender.Send(query, ct);
 
         return result.ToHttpResult();
     }

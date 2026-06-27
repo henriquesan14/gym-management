@@ -25,7 +25,6 @@ public static class DependencyInjection
     {
         services.AddOpenApi();
         services.AddCorsConfig(builder.Environment);
-        services.AddJsonSerializationConfig();
         services.AddAuthConfig(configuration, builder.Environment);
 
         services.AddHttpContextAccessor();
@@ -33,7 +32,7 @@ public static class DependencyInjection
 
         services.AddHangfireConfig(configuration);
 
-        services.AddCarter();
+        services.AddJsonSerializationConfig().AddCarter();
 
         services.AddExceptionHandler<CustomExceptionHandler>();
 
