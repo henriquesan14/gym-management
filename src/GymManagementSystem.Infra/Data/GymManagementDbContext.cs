@@ -16,6 +16,7 @@ public class GymManagementDbContext : DbContext
     public DbSet<Membership> Memberships => Set<Membership>();
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<CheckIn> CheckIns => Set<CheckIn>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

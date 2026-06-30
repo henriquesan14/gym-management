@@ -8,12 +8,15 @@ namespace GymManagementSystem.Domain.Members;
 public class Member : Aggregate<MemberId>, IAuditableEntity
 {
     private readonly List<Membership> _memberships = [];
+    private readonly List<CheckIn> _checkIns = [];
 
     public string FullName { get; private set; } = default!;
     public Email Email { get; private set; } = default!;
 
     public IReadOnlyCollection<Membership> Memberships =>
         _memberships.AsReadOnly();
+
+    public IReadOnlyCollection<CheckIn> CheckIns => _checkIns.AsReadOnly();
 
     private Member()
     {
@@ -50,6 +53,22 @@ public class Member : Aggregate<MemberId>, IAuditableEntity
                 membership.Id));
 
         return membership;
+    }
+
+    public void CheckIn()
+    {
+        if (Memberships.All(x => !x.IsActive))
+            throw new DomainException("Member does not have an active membership.");
+
+        var today = DateOnly.FromDateTime(DateTime.Now);
+
+        if (_checkIns.Any(x => DateOnly.FromDateTime(x.CheckedInAt) == today))
+            throw new DomainException("Member has already checked in today.");
+
+        var checkIn = new CheckIn(Id);
+        _checkIns.Add(checkIn);
+
+        //AddDomainEvent(new MemberCheckedInDomainEvent(Id));
     }
 
     public void EnterMembershipGracePeriod(MembershipId membershipId)

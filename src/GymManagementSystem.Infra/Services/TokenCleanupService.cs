@@ -11,7 +11,7 @@ public class TokenCleanupService(GymManagementDbContext dbContext, ILogger<Token
     {
         logger.LogInformation("⏰ Iniciando job de limpeza de tokens revogados e expirados em {Date}", DateTime.Now);
         var deletedCount = await dbContext.RefreshTokens
-            .Where(r => r.IsRevoked || r.IsExpired).ExecuteDeleteAsync();
+            .Where(r => r.RevokedAt !=  null || r.ExpiresAt <= DateTime.Now).ExecuteDeleteAsync();
 
         logger.LogInformation("✅ Job de limpeza de tokens revogados e expirados concluído com sucesso ({Count} tokens apagados)", deletedCount);
     }

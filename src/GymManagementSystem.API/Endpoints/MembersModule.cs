@@ -3,6 +3,7 @@ using FluentValidation;
 using GymManagementSystem.API.Extensions;
 using GymManagementSystem.API.Requests;
 using GymManagementSystem.Application.Members.Commands.CancelMembership;
+using GymManagementSystem.Application.Members.Commands.CheckIn;
 using GymManagementSystem.Application.Members.Commands.CreateMember;
 using GymManagementSystem.Application.Members.Commands.CreateMembership;
 using GymManagementSystem.Application.Members.Commands.DeleteMember;
@@ -26,6 +27,7 @@ public class MemberModule : ICarterModule
         group.MapPost("/{memberId}/memberships/renew", RenewMembership);
         group.MapPost("/{memberId}/memberships/{membershipId}/cancel", CancelMembership);
         group.MapGet("/{memberId}/memberships/", GetMemberMembership);
+        group.MapPost("/{memberId}/checkins", CheckIn);
     }
 
     private static async Task<IResult> Create(
@@ -114,6 +116,18 @@ public class MemberModule : ICarterModule
         CancellationToken ct)
     {
         var query = new GetMemberMembershipQuery(memberId);
+
+        var result = await sender.Send(query, ct);
+
+        return result.ToHttpResult();
+    }
+
+    private static async Task<IResult> CheckIn(
+        Guid memberId,
+        ISender sender,
+        CancellationToken ct)
+    {
+        var query = new CheckInCommand(memberId);
 
         var result = await sender.Send(query, ct);
 

@@ -20,4 +20,7 @@ public static class MemberErrors
 
     public static Error DeleteFailure =>
         Error.Failure("Member.DeleteFailure", $"Something went wrong in deleting Member");
+
+    public static Error AlreadyCheckedInToday() =>
+        Error.Conflict("Member.Conflict", "Already checkIn today for this member.");
 }

@@ -41,5 +41,14 @@ public class MemberConfiguration : IEntityTypeConfiguration<Member>
         builder.Metadata
             .FindNavigation(nameof(Member.Memberships))!
             .SetPropertyAccessMode(PropertyAccessMode.Field);
+
+        builder.HasMany(m => m.CheckIns)
+            .WithOne()
+            .HasForeignKey("MemberId")
+            .OnDelete(DeleteBehavior.Cascade);
+
+                builder.Metadata
+                    .FindNavigation(nameof(Member.CheckIns))!
+                    .SetPropertyAccessMode(PropertyAccessMode.Field);
     }
 }
