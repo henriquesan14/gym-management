@@ -6,6 +6,7 @@ using GymManagementSystem.Domain.Users.Contracts;
 using GymManagementSystem.Infra.Data;
 using GymManagementSystem.Infra.Data.Interceptors;
 using GymManagementSystem.Infra.Data.Repositories;
+using GymManagementSystem.Infra.Options;
 using GymManagementSystem.Infra.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -43,18 +44,33 @@ public static class DependencyInjection
         services.AddScoped<ITokenCleanupService, TokenCleanupService>();
         services.AddScoped<IMembershipExpirationBackgroundService, MembershipExpirationBackgroundService>();
         services.AddScoped<ICheckInService, CheckInService>();
-        //services.AddScoped<ISubscriptionsJobService, SubscriptionsJobService>();
-        //services.AddScoped<IEmailSender, SendGridEmailSender>();
-        //services.AddScoped<IEmailService, EmailService>();
-        //services.AddScoped<IAsaasService, AsaasService>();
-        //services.AddScoped<ICacheService, RedisCacheService>();
-        //services.AddScoped<IClientRuleCheck, RuleCheckService>();
-        //services.AddScoped<IUserRuleCheck, RuleCheckService>();
-        //services.AddScoped<ITenantRuleCheck, RuleCheckService>();
-        //services.AddScoped<ISubscriptionPlanRuleCheck, RuleCheckService>();
 
         services.AddSingleton<IPasswordCheck, PasswordService>();
         services.AddSingleton<IPasswordHash, PasswordService>();
+
+        services.AddOptions<JwtOptions>()
+            .Bind(configuration.GetSection(JwtOptions.SectionName))
+            .Validate(options => !string.IsNullOrWhiteSpace(options.Secret),
+                "JWT Secret is required.")
+            .Validate(options => !string.IsNullOrWhiteSpace(options.Issuer),
+                "JWT Issuer is required.")
+            .Validate(options => !string.IsNullOrWhiteSpace(options.Audience),
+                "JWT Audience is required.")
+            .Validate(options => options.AccessTokenExpirationInMinutes > 0,
+                "AccessTokenExpirationInMinutes must be greater than zero.")
+            .Validate(options => options.RefreshTokenExpirationInDays > 0,
+                "RefreshTokenExpirationInDays must be greater than zero.")
+            .ValidateOnStart();
+
+        services.Configure<IpRateLimitingOptions>(
+            configuration.GetSection(IpRateLimitingOptions.SectionName));
+
+        services.AddOptions<MembershipOptions>()
+            .Bind(configuration.GetSection(MembershipOptions.SectionName))
+            .Validate(options => options.GracePeriodDays > 0,
+                "GracePeriodDays must be greater than zero.")
+            .ValidateOnStart();
+
 
         return services;
     }

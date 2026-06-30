@@ -1,4 +1,5 @@
 ﻿using AspNetCoreRateLimit;
+using GymManagementSystem.Infra.Options;
 
 namespace GymManagementSystem.API.Extensions;
 
@@ -8,7 +9,14 @@ public static class RateLimitingExtensions
     {
         services.AddMemoryCache();
 
-        services.Configure<IpRateLimitOptions>(configuration.GetSection("IpRateLimiting"));
+        services.Configure<IpRateLimitingOptions>(
+            configuration.GetSection(IpRateLimitingOptions.SectionName));
+
+        services.Configure<RateLimitOptions>(
+            configuration.GetSection("IpRateLimiting"));
+
+        services.Configure<IpRateLimitPolicies>(
+            configuration.GetSection("IpRateLimitPolicies"));
 
         services.AddInMemoryRateLimiting();
         services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();

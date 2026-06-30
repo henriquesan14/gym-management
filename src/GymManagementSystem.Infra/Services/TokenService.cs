@@ -1,6 +1,7 @@
 ﻿using GymManagementSystem.Application.Auth;
 using GymManagementSystem.Domain.Users;
-using Microsoft.Extensions.Configuration;
+using GymManagementSystem.Infra.Options;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,14 +9,15 @@ using System.Text;
 
 namespace GymManagementSystem.Infra.Services;
 
-public sealed class TokenService(IConfiguration _configuration) : ITokenService
+public sealed class TokenService(IOptions<JwtOptions> options) : ITokenService
 {
+    private readonly JwtOptions _options = options.Value;
     public TokenResponse GenerateAccessToken(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_configuration["TokenSettings:Secret"]!);
-        var accessTokenExpiration = DateTime.Now.AddMinutes(50);
-        var refreshTokenExpiration = DateTime.Now.AddDays(7);
+        var key = Encoding.ASCII.GetBytes(_options.Secret);
+        var accessTokenExpiration = DateTime.Now.AddMinutes(_options.AccessTokenExpirationInMinutes);
+        var refreshTokenExpiration = DateTime.Now.AddDays(_options.RefreshTokenExpirationInDays);
 
         var claims = new List<Claim>
         {
@@ -27,6 +29,8 @@ public sealed class TokenService(IConfiguration _configuration) : ITokenService
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
+            Issuer = _options.Issuer,
+            Audience = _options.Audience,
             Subject = new ClaimsIdentity(claims),
             NotBefore = DateTime.Now,
             Expires = accessTokenExpiration,

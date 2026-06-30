@@ -1,19 +1,20 @@
 ﻿using GymManagementSystem.Application.Members;
 using GymManagementSystem.Domain.Enums;
 using GymManagementSystem.Infra.Data;
+using GymManagementSystem.Infra.Options;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace GymManagementSystem.Infra.Services;
 
-public sealed class MembershipExpirationBackgroundService(ILogger<MembershipExpirationBackgroundService> logger, GymManagementDbContext dbContext, IConfiguration configuration)
+public sealed class MembershipExpirationBackgroundService(ILogger<MembershipExpirationBackgroundService> logger, GymManagementDbContext dbContext, IOptions<MembershipOptions> options)
     : IMembershipExpirationBackgroundService
 {
+    private readonly MembershipOptions _options = options.Value;
     public async Task ProcessMemberships(CancellationToken ct)
     {
         var today = DateOnly.FromDateTime(DateTime.Now);
-        var gracePeriodDays = Int32.Parse(configuration["GracePeriodDays"]!);
 
         var memberships = await dbContext.Memberships
             .Where(x =>
@@ -31,7 +32,7 @@ public sealed class MembershipExpirationBackgroundService(ILogger<MembershipExpi
                 membership.EnterGracePeriod();
             }
             else if (membership.Status == MembershipStatus.GracePeriod &&
-                     daysExpired >= gracePeriodDays)
+                     daysExpired >= _options.GracePeriodDays)
             {
                 membership.Expire();
             }

@@ -21,11 +21,11 @@ public static class DependencyInjection
         }
     }
 
-    public static IServiceCollection AddApiServices(this IServiceCollection services, WebApplicationBuilder builder, IConfiguration configuration)
+    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
         services.AddOpenApi();
-        services.AddCorsConfig(builder.Environment);
-        services.AddAuthConfig(configuration, builder.Environment);
+        services.AddCorsConfig(env);
+        services.AddAuthConfig(configuration, env);
 
         services.AddHttpContextAccessor();
         services.AddScoped<IUserContext, UserContext>();
@@ -39,7 +39,7 @@ public static class DependencyInjection
         services.AddHealthChecks()
         .AddNpgSql(configuration.GetConnectionString("DbConnection")!);
 
-        services.AddRateLimitingConfig(builder.Configuration);
+        services.AddRateLimitingConfig(configuration);
 
         return services;
     }

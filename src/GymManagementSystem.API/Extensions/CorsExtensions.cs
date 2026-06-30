@@ -2,7 +2,7 @@
 
 public static class CorsExtensions
 {
-    public static IServiceCollection AddCorsConfig(this IServiceCollection services, IWebHostEnvironment env)
+    public static IServiceCollection AddCorsConfig(this IServiceCollection services, IHostEnvironment env)
     {
         services.AddCors(options =>
         {

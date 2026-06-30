@@ -9,7 +9,7 @@ var configuration = builder.Configuration;
 builder.Services
     .AddInfrastructure(configuration)
     .AddApplication()
-    .AddApiServices(builder, configuration);
+    .AddApiServices(configuration, builder.Environment);
 
 
 var app = builder.Build();

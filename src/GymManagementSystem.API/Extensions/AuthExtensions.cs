@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using GymManagementSystem.Infra.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -6,10 +7,15 @@ namespace GymManagementSystem.API.Extensions;
 
 public static class AuthExtensions
 {
-    public static IServiceCollection AddAuthConfig(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
+    public static IServiceCollection AddAuthConfig(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env)
     {
         var isDevelopment = env.IsDevelopment();
-        var secretKey = Encoding.ASCII.GetBytes(configuration["TokenSettings:Secret"]!);
+        var jwt = configuration
+            .GetSection(JwtOptions.SectionName)
+            .Get<JwtOptions>()
+            ?? throw new InvalidOperationException("JWT configuration is missing.");
+
+        var secretKey = Encoding.UTF8.GetBytes(jwt.Secret);
 
         services.AddAuthentication(x =>
         {
@@ -24,8 +30,10 @@ public static class AuthExtensions
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(secretKey),
-                ValidateIssuer = false,
-                ValidateAudience = false,
+                ValidateIssuer = true,
+                ValidIssuer = jwt.Issuer,
+                ValidateAudience = true,
+                ValidAudience = jwt.Audience,
                 ClockSkew = TimeSpan.Zero,
                 ValidateLifetime = true
             };
