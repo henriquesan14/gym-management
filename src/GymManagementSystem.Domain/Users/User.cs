@@ -5,15 +5,15 @@ using GymManagementSystem.Domain.ValueObjects;
 
 namespace GymManagementSystem.Domain.Users;
 
-public class User : Aggregate<UserId>, IAuditableEntity
+public sealed class User : Aggregate<UserId>, IAuditableEntity
 {
     private User()
     {
     }
 
-    public User(string name, Email email, UserRole role, string password, IPasswordHash passwordHash)
+    public User(UserId id, string name, Email email, UserRole role, string password, IPasswordHash passwordHash)
     {
-        Id = UserId.Of(Guid.NewGuid());
+        Id = id;
         Name = name;
         Email = email;
         PasswordHash = passwordHash.HashPassword(password);

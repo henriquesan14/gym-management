@@ -1,3 +1,3 @@
 ﻿namespace GymManagementSystem.API.Requests;
 
-public record CreateMembershipRequest(DateOnly StartDate, int DurationInMonths);
+public sealed record CreateMembershipRequest(DateOnly StartDate, int DurationInMonths);

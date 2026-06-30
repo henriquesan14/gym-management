@@ -2,7 +2,7 @@
 
 namespace GymManagementSystem.Domain.Members.Specifications;
 
-public class MemberByIdWithMembershipsSpecification : SingleResultSpecification<Member>
+public sealed class MemberByIdWithMembershipsSpecification : SingleResultSpecification<Member>
 {
     public MemberByIdWithMembershipsSpecification(Guid Id)
     {

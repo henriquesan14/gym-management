@@ -7,9 +7,9 @@ public sealed class CheckIn : Entity<CheckInId>, IAuditableEntity
     private CheckIn()
     {
     }
-    public CheckIn(MemberId memberId)
+    public CheckIn(CheckInId id, MemberId memberId)
     {
-        Id = CheckInId.Of(Guid.NewGuid());
+        Id = id;
         MemberId = memberId;
         CheckedInAt = DateTime.Now;
     }

@@ -1,6 +1,6 @@
 ﻿namespace GymManagementSystem.Shared.Common.Pagination;
 
-public class PaginatedResult<TDto>
+public sealed class PaginatedResult<TDto>
 (int pageIndex, int pageSize, long count, IEnumerable<TDto> data)
 where TDto : class
 {

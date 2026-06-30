@@ -6,11 +6,11 @@ using GymManagementSystem.Shared.Common.ResultPattern;
 
 namespace GymManagementSystem.Application.Auth.Commands.RevokeRefreshToken;
 
-public class RevokeRefreshTokenCommandHandler(IUnitOfWork unitOfWork, IUserContext userContext) : ICommandHandler<RevokeRefreshTokenCommand, Result>
+public sealed class RevokeRefreshTokenCommandHandler(IUnitOfWork unitOfWork, IUserContext userContext) : ICommandHandler<RevokeRefreshTokenCommand, Result>
 {
     public async Task<Result> Handle(
         RevokeRefreshTokenCommand request,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         var refreshToken = userContext.RefreshToken;
 
@@ -21,12 +21,12 @@ public class RevokeRefreshTokenCommandHandler(IUnitOfWork unitOfWork, IUserConte
         }
 
         var token = await unitOfWork.RefreshTokens.SingleOrDefaultAsync(
-            new GetRefreshTokenByTokenSpecification(refreshToken));
+            new GetRefreshTokenByTokenSpecification(refreshToken), ct);
 
         if (token is not null && !token.IsRevoked)
         {
             token.Revoke(userContext.IpAddress!);
-            await unitOfWork.CompleteAsync();
+            await unitOfWork.CompleteAsync(ct);
         }
 
         userContext.RemoveCookiesToken();

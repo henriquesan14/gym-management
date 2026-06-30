@@ -3,7 +3,7 @@ using GymManagementSystem.Domain.ValueObjects;
 
 namespace GymManagementSystem.Domain.Users.Specifications;
 
-public class UserByEmailSpecification : SingleResultSpecification<User>
+public sealed class UserByEmailSpecification : SingleResultSpecification<User>
 {
     public UserByEmailSpecification(string email)
     {

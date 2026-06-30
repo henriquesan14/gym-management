@@ -2,7 +2,7 @@
 
 namespace GymManagementSystem.Application.Auth.Commands.GenerateAccessToken;
 
-public class GenerateAccessTokenCommandValidator : AbstractValidator<GenerateAccessTokenCommand>
+public sealed class GenerateAccessTokenCommandValidator : AbstractValidator<GenerateAccessTokenCommand>
 {
     public GenerateAccessTokenCommandValidator()
     {

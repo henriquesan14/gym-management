@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace GymManagementSystem.Infra.Data.Interceptors;
 
-public class AuditableEntityInterceptor(IUserContext userContext) : SaveChangesInterceptor
+public sealed class AuditableEntityInterceptor(IUserContext userContext) : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
     {

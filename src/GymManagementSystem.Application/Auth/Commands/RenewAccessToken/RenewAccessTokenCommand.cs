@@ -3,4 +3,4 @@ using GymManagementSystem.Shared.Common.ResultPattern;
 
 namespace GymManagementSystem.Application.Auth.Commands.RenewAccessToken;
 
-public record RenewAccessTokenCommand : ICommand<ResultT<AuthResponse>>;
+public sealed record RenewAccessTokenCommand : ICommand<ResultT<AuthResponse>>;

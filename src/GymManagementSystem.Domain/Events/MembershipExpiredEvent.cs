@@ -3,5 +3,5 @@ using GymManagementSystem.Domain.Members;
 
 namespace GymManagementSystem.Domain.Events;
 
-public record MembershipExpiredEvent(MemberId MemberId, MembershipId MembershipId) : IDomainEvent;
+public sealed record MembershipExpiredEvent(MemberId MemberId, MembershipId MembershipId) : IDomainEvent;
 

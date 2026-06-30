@@ -1,9 +1,7 @@
 ﻿using GymManagementSystem.Domain.Abstractions;
 using GymManagementSystem.Domain.AuditLogs;
 using GymManagementSystem.Domain.Enums;
-using GymManagementSystem.Domain.Users;
 using GymManagementSystem.Domain.Users.Contracts;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -79,7 +77,7 @@ public sealed class AuditInterceptor : SaveChangesInterceptor
             : null;
 
         return new AuditLog(
-            AuditLogId.Of(Guid.NewGuid()),
+            AuditLogId.New(),
             tableName!,
             entityName,
             entityId,

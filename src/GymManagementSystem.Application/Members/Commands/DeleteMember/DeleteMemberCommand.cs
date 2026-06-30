@@ -3,4 +3,4 @@ using GymManagementSystem.Shared.Common.ResultPattern;
 
 namespace GymManagementSystem.Application.Members.Commands.DeleteMember;
 
-public record DeleteMemberCommand(Guid Id) : ICommand<Result>;
+public sealed record DeleteMemberCommand(Guid Id) : ICommand<Result>;

@@ -3,7 +3,7 @@ using System.Security.Claims;
 
 namespace GymManagementSystem.API.Services;
 
-public class UserContext : IUserContext
+public sealed class UserContext : IUserContext
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 

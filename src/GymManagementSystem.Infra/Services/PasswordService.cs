@@ -2,7 +2,7 @@
 
 namespace GymManagementSystem.Infra.Services;
 
-public class PasswordService : IPasswordCheck, IPasswordHash
+public sealed class PasswordService : IPasswordCheck, IPasswordHash
 {
     public bool Matches(string password, string hash)
     {

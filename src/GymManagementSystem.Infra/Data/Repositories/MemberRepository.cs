@@ -4,7 +4,7 @@ using GymManagementSystem.Domain.Members.Specifications;
 
 namespace GymManagementSystem.Infra.Data.Repositories;
 
-public class MemberRepository : Repository<Member, MemberId>, IMemberRepository
+public sealed class MemberRepository : Repository<Member, MemberId>, IMemberRepository
 {
     public MemberRepository(GymManagementDbContext context) : base(context)
     {

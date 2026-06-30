@@ -7,7 +7,7 @@ using Npgsql;
 
 namespace GymManagementSystem.API.ErrorHandling;
 
-public class CustomExceptionHandler
+public sealed class CustomExceptionHandler
 (ILogger<CustomExceptionHandler> logger)
 : IExceptionHandler
 {

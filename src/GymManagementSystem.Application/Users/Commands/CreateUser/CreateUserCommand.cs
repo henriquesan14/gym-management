@@ -4,4 +4,4 @@ using GymManagementSystem.Shared.Common.ResultPattern;
 
 namespace GymManagementSystem.Application.Users.Commands.CreateUser;
 
-public record CreateUserCommand(string Name, string Email, string Password, UserRole Role) : ICommand<ResultT<UserResponse>>;
+public sealed record CreateUserCommand(string Name, string Email, string Password, UserRole Role) : ICommand<ResultT<UserResponse>>;

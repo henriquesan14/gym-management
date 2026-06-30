@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace GymManagementSystem.Infra.Services;
 
-public class TokenCleanupService(GymManagementDbContext dbContext, ILogger<TokenCleanupService> logger) : ITokenCleanupService
+public sealed class TokenCleanupService(GymManagementDbContext dbContext, ILogger<TokenCleanupService> logger) : ITokenCleanupService
 {
     public async Task CleanupExpiredAndRevokedTokensAsync()
     {

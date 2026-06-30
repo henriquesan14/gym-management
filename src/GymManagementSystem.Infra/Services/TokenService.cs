@@ -8,7 +8,7 @@ using System.Text;
 
 namespace GymManagementSystem.Infra.Services;
 
-public class TokenService(IConfiguration _configuration) : ITokenService
+public sealed class TokenService(IConfiguration _configuration) : ITokenService
 {
     public TokenResponse GenerateAccessToken(User user)
     {

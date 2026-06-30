@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GymManagementSystem.Infra.Data.Configurations;
 
-public class MemberConfiguration : IEntityTypeConfiguration<Member>
+public sealed class MemberConfiguration : IEntityTypeConfiguration<Member>
 {
     public void Configure(EntityTypeBuilder<Member> builder)
     {

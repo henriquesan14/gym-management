@@ -6,7 +6,7 @@ using GymManagementSystem.Shared.Common.ResultPattern;
 
 namespace GymManagementSystem.Application.Members.Commands.CheckIn;
 
-public class CheckInCommandHandler(
+public sealed class CheckInCommandHandler(
     IUnitOfWork unitOfWork, ICheckInService checkInService)
     : ICommandHandler<CheckInCommand, Result>
 {
@@ -17,20 +17,20 @@ public class CheckInCommandHandler(
         var member = await unitOfWork.Members
             .SingleOrDefaultAsync(
                 new MemberByIdWithMembershipsSpecification(
-                    request.MemberId));
+                    request.MemberId), ct);
 
         if (member is null)
             return MemberErrors.NotFound(request.MemberId);
 
         var today = DateOnly.FromDateTime(DateTime.Today);
-        var alreadyCheckedInToday = await checkInService.HasCheckedInTodayAsync(MemberId.Of(request.MemberId), today, new CancellationToken());
+        var alreadyCheckedInToday = await checkInService.HasCheckedInTodayAsync(MemberId.Of(request.MemberId), today, ct);
 
         if (alreadyCheckedInToday)
             return MemberErrors.AlreadyCheckedInToday();
 
         member.CheckIn();
 
-        await unitOfWork.CompleteAsync();
+        await unitOfWork.CompleteAsync(ct);
 
         return Result.Success();
     }

@@ -2,4 +2,4 @@
 
 namespace GymManagementSystem.Application.Auth;
 
-public record AuthResponse(Guid UserId, string Name, UserRole Role);
+public sealed record AuthResponse(Guid UserId, string Name, UserRole Role);

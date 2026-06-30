@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace GymManagementSystem.API.Filters;
 
-public class CookieAuthDashboardFilter : IDashboardAuthorizationFilter
+public sealed class CookieAuthDashboardFilter : IDashboardAuthorizationFilter
 {
     public bool Authorize(DashboardContext context)
     {

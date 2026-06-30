@@ -2,7 +2,7 @@
 
 namespace GymManagementSystem.Application.Users.Commands.CreateUser;
 
-public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
+public sealed class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
     public CreateUserCommandValidator()
     {

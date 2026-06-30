@@ -1,6 +1,6 @@
 ﻿namespace GymManagementSystem.Shared.Common.ResultPattern;
 
-public class Error
+public sealed class Error
 {
     private Error(
         string code,

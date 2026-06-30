@@ -6,9 +6,9 @@ using GymManagementSystem.Shared.Common.ResultPattern;
 
 namespace GymManagementSystem.Application.Members.Commands.CancelMembership;
 
-public class CancelMembershipCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<CancelMembershipCommand, Result>
+public sealed class CancelMembershipCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<CancelMembershipCommand, Result>
 {
-    public async Task<Result> Handle(CancelMembershipCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CancelMembershipCommand request, CancellationToken ct)
     {
         var member = await unitOfWork.Members.SingleOrDefaultAsync(new MemberByIdWithMembershipsSpecification(request.MemberId));
 
@@ -17,7 +17,7 @@ public class CancelMembershipCommandHandler(IUnitOfWork unitOfWork) : ICommandHa
 
         member.CancelMembership(MembershipId.Of(request.MembershipId));
 
-        await unitOfWork.CompleteAsync();
+        await unitOfWork.CompleteAsync(ct);
 
         return Result.Success();
     }

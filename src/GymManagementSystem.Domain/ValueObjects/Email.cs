@@ -2,12 +2,8 @@ using GymManagementSystem.Domain.Exceptions;
 
 namespace GymManagementSystem.Domain.ValueObjects;
 
-public record Email
+public sealed record Email(string Value)
 {
-    public string Value { get; }
-
-    private Email(string value) => Value = value;
-
     public static Email Of(string value)
     {
         if (string.IsNullOrWhiteSpace(value))

@@ -4,7 +4,7 @@ using GymManagementSystem.Domain.Users.Specifications;
 
 namespace GymManagementSystem.Infra.Data.Repositories;
 
-public class UserRepository : Repository<User, UserId>, IUserRepository
+public sealed class UserRepository : Repository<User, UserId>, IUserRepository
 {
     public UserRepository(GymManagementDbContext context) : base(context)
     {

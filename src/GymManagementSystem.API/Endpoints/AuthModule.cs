@@ -8,7 +8,7 @@ using MediatR;
 
 namespace GymManagementSystem.API.Endpoints;
 
-public class AuthModule : ICarterModule
+public sealed class AuthModule : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {

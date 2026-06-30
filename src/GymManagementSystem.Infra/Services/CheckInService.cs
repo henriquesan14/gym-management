@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymManagementSystem.Infra.Services;
 
-public class CheckInService(GymManagementDbContext dbContext) : ICheckInService
+public sealed class CheckInService(GymManagementDbContext dbContext) : ICheckInService
 {
     public async Task<bool> HasCheckedInTodayAsync(
         MemberId memberId,

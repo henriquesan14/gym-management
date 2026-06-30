@@ -202,6 +202,70 @@ namespace GymManagementSystem.Infra.Migrations
                     b.ToTable("Memberships", (string)null);
                 });
 
+            modelBuilder.Entity("GymManagementSystem.Domain.Payments.Payment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("timestamp");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("CreatedByName")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("timestamp");
+
+                    b.Property<Guid?>("LastModifiedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MembershipId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<DateTime?>("PaidAt")
+                        .HasColumnType("timestamp");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("TransactionId")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedAt");
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("MembershipId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("TransactionId")
+                        .IsUnique()
+                        .HasFilter("\"TransactionId\" IS NOT NULL");
+
+                    b.ToTable("Payments", (string)null);
+                });
+
             modelBuilder.Entity("GymManagementSystem.Domain.Users.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")

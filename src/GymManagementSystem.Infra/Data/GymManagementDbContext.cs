@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace GymManagementSystem.Infra.Data;
 
-public class GymManagementDbContext : DbContext
+public sealed class GymManagementDbContext : DbContext
 {
     public GymManagementDbContext(DbContextOptions<GymManagementDbContext> options)
     : base(options)

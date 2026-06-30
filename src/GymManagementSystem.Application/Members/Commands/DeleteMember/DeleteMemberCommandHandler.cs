@@ -5,14 +5,14 @@ using GymManagementSystem.Shared.Common.ResultPattern;
 
 namespace GymManagementSystem.Application.Members.Commands.DeleteMember;
 
-public class DeleteMemberCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<DeleteMemberCommand, Result>
+public sealed class DeleteMemberCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<DeleteMemberCommand, Result>
 {
-    public async Task<Result> Handle(DeleteMemberCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteMemberCommand request, CancellationToken ct)
     {
-        var member = await unitOfWork.Members.GetByIdAsync(MemberId.Of(request.Id));
+        var member = await unitOfWork.Members.GetByIdAsync(MemberId.Of(request.Id), ct);
         if (member == null) return MemberErrors.NotFound(request.Id);
 
-        await unitOfWork.Members.DeleteAsync(member, cancellationToken);
+        await unitOfWork.Members.DeleteAsync(member, ct);
 
         return Result.Success();
     }

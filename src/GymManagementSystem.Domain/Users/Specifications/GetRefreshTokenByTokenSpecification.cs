@@ -2,7 +2,7 @@
 
 namespace GymManagementSystem.Domain.Users.Specifications;
 
-public class GetRefreshTokenByTokenSpecification : SingleResultSpecification<RefreshToken>
+public sealed class GetRefreshTokenByTokenSpecification : SingleResultSpecification<RefreshToken>
 {
     public GetRefreshTokenByTokenSpecification(string refreshToken)
     {

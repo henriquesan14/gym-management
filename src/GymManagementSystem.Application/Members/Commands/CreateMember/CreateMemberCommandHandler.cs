@@ -6,18 +6,18 @@ using GymManagementSystem.Shared.Common.ResultPattern;
 
 namespace GymManagementSystem.Application.Members.Commands.CreateMember;
 
-public class CreateMemberCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<CreateMemberCommand, ResultT<MemberResponse>>
+public sealed class CreateMemberCommandHandler(IUnitOfWork unitOfWork) : ICommandHandler<CreateMemberCommand, ResultT<MemberResponse>>
 {
-    public async Task<ResultT<MemberResponse>> Handle(CreateMemberCommand request, CancellationToken cancellationToken)
+    public async Task<ResultT<MemberResponse>> Handle(CreateMemberCommand request, CancellationToken ct)
     {
-        var emailExist = await unitOfWork.Members.EmailExistsAsync(request.Email);
+        var emailExist = await unitOfWork.Members.EmailExistsAsync(request.Email, ct);
 
         if (emailExist) return MemberErrors.Conflict(request.Email);
 
-        var member = new Member(MemberId.Of(Guid.NewGuid()), request.FullName, Email.Of(request.Email));
+        var member = new Member(MemberId.New(), request.FullName, Email.Of(request.Email));
 
-        await unitOfWork.Members.AddAsync(member);
-        await unitOfWork.CompleteAsync();
+        await unitOfWork.Members.AddAsync(member, ct);
+        await unitOfWork.CompleteAsync(ct);
 
         return member.ToDto();
     }

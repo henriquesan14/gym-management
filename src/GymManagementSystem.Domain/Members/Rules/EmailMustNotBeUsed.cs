@@ -3,7 +3,7 @@ using GymManagementSystem.Domain.Members.Contracts;
 
 namespace GymManagementSystem.Domain.Members.Rules;
 
-internal class EmailMustNotBeUsed(string email, IMemberRuleCheck check) : IBusinessRule
+public sealed class EmailMustNotBeUsed(string email, IMemberRuleCheck check) : IBusinessRule
 {
     public string Message => "Email member is used";
 

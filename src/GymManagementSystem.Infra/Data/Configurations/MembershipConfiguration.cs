@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GymManagementSystem.Infra.Data.Configurations;
 
-public class MembershipConfiguration : IEntityTypeConfiguration<Membership>
+public sealed class MembershipConfiguration : IEntityTypeConfiguration<Membership>
 {
     public void Configure(EntityTypeBuilder<Membership> builder)
     {

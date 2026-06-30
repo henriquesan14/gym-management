@@ -2,19 +2,16 @@
 
 namespace GymManagementSystem.Domain.Users;
 
-public record RefreshTokenId
+public sealed record RefreshTokenId(Guid Value)
 {
-    public Guid Value { get; }
-
-    private RefreshTokenId(Guid value) => Value = value;
-
     public static RefreshTokenId Of(Guid value)
     {
-        ArgumentNullException.ThrowIfNull(value);
         if (value == Guid.Empty)
-        {
             throw new DomainException("RefreshTokenId cannot be empty.");
-        }
-        return new RefreshTokenId(value);
+
+        return new(value);
     }
+
+    public static RefreshTokenId New() =>
+        new(Guid.NewGuid());
 }

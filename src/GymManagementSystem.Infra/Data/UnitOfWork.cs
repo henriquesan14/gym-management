@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace GymManagementSystem.Infra.Data;
 
-public class UnitOfWork : IUnitOfWork, IDisposable
+public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
 {
-    private IDbContextTransaction _transaction = default!;
+    private IDbContextTransaction? _transaction;
     private readonly GymManagementDbContext _dbContext;
 
     public UnitOfWork(GymManagementDbContext dbContext, IMemberRepository members, IUserRepository users, IRefreshTokenRepository refreshTokens)
@@ -23,41 +23,45 @@ public class UnitOfWork : IUnitOfWork, IDisposable
     public IUserRepository Users { get; }
     public IRefreshTokenRepository RefreshTokens { get; }
 
-    public async Task BeginTransaction()
+    public async Task BeginTransaction(CancellationToken ct)
     {
-        _transaction = await _dbContext.Database.BeginTransactionAsync();
+        if (_transaction is not null)
+            throw new InvalidOperationException("A transaction is already active.");
+
+        _transaction = await _dbContext.Database.BeginTransactionAsync(ct);
     }
 
-    public async Task CommitAsync()
+    public async Task CommitAsync(CancellationToken ct)
     {
+        if (_transaction is null)
+            throw new InvalidOperationException("No active transaction.");
+
         try
         {
-            await _transaction.CommitAsync();
+            await _transaction.CommitAsync(ct);
         }
-        catch (Exception ex)
+        catch
         {
-            await _transaction.RollbackAsync();
-            throw ex;
+            await _transaction.RollbackAsync(ct);
+            throw;
         }
-    }
-
-    public async Task<int> CompleteAsync()
-    {
-        return await _dbContext.SaveChangesAsync();
-    }
-
-    public void Dispose()
-    {
-        IsDisposing(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void IsDisposing(bool disposing)
-    {
-        if (disposing)
+        finally
         {
-            _transaction?.Dispose();
-            _dbContext.Dispose();
+            await _transaction.DisposeAsync();
+            _transaction = null;
         }
+    }
+
+    public async Task<int> CompleteAsync(CancellationToken ct)
+    {
+        return await _dbContext.SaveChangesAsync(ct);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_transaction is not null)
+            await _transaction.DisposeAsync();
+
+        await _dbContext.DisposeAsync();
     }
 }

@@ -4,7 +4,7 @@ using GymManagementSystem.Domain.Exceptions;
 
 namespace GymManagementSystem.Domain.Members;
 
-public class Membership : Entity<MembershipId>, IAuditableEntity
+public sealed class Membership : Entity<MembershipId>, IAuditableEntity
 {
     public DateOnly StartDate { get; private set; }
     public DateOnly EndDate { get; private set; }

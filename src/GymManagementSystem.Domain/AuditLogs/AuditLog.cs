@@ -4,7 +4,7 @@ using GymManagementSystem.Domain.Users;
 
 namespace GymManagementSystem.Domain.AuditLogs;
 
-public class AuditLog : Entity<AuditLogId>
+public sealed class AuditLog : Entity<AuditLogId>
 {
     private AuditLog() { }
     public AuditLog(AuditLogId id, string tableName, string entityName, string entityId, AuditAction action,

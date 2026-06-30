@@ -5,7 +5,7 @@ using GymManagementSystem.Domain.ValueObjects;
 
 namespace GymManagementSystem.Domain.Members;
 
-public class Member : Aggregate<MemberId>, IAuditableEntity
+public sealed class Member : Aggregate<MemberId>, IAuditableEntity
 {
     private readonly List<Membership> _memberships = [];
     private readonly List<CheckIn> _checkIns = [];
@@ -41,7 +41,7 @@ public class Member : Aggregate<MemberId>, IAuditableEntity
                 "Member already has an active membership.");
 
         var membership = new Membership(
-            MembershipId.Of(Guid.NewGuid()),
+            MembershipId.New(),
             startDate,
             startDate.AddMonths(durationInMonths));
 
@@ -65,10 +65,10 @@ public class Member : Aggregate<MemberId>, IAuditableEntity
         if (_checkIns.Any(x => DateOnly.FromDateTime(x.CheckedInAt) == today))
             throw new DomainException("Member has already checked in today.");
 
-        var checkIn = new CheckIn(Id);
+        var checkIn = new CheckIn(CheckInId.New(), Id);
         _checkIns.Add(checkIn);
 
-        //AddDomainEvent(new MemberCheckedInDomainEvent(Id));
+        AddDomainEvent(new MemberCheckedInDomainEvent(Id));
     }
 
     public void EnterMembershipGracePeriod(MembershipId membershipId)
