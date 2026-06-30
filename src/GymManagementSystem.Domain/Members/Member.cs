@@ -78,7 +78,7 @@ public class Member : Aggregate<MemberId>, IAuditableEntity
 
         membership.EnterGracePeriod();
 
-        AddDomainEvent(new MembershipEnteredGracePeriodDomainEvent(
+        AddDomainEvent(new MembershipEnteredGracePeriodEvent(
             Id,
             membership.Id));
     }
@@ -111,7 +111,7 @@ public class Member : Aggregate<MemberId>, IAuditableEntity
 
         membership.Expire();
 
-        AddDomainEvent(new MembershipExpiredDomainEvent(Id, membership.Id));
+        AddDomainEvent(new MembershipExpiredEvent(Id, membership.Id));
     }
 
     public Membership? GetActiveMembership()
