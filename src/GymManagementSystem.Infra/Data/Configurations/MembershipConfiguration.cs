@@ -1,4 +1,5 @@
 using GymManagementSystem.Domain.Members;
+using GymManagementSystem.Domain.MembershipPlans;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,6 +19,12 @@ public sealed class MembershipConfiguration : IEntityTypeConfiguration<Membershi
                 value => MembershipId.Of(value))
             .ValueGeneratedNever();
 
+        builder.Property(x => x.MembershipPlanId)
+            .HasConversion(
+                id => id.Value,
+                value => MembershipPlanId.Of(value))
+            .IsRequired();
+
         builder.Property(m => m.StartDate)
             .IsRequired();
 
@@ -28,5 +35,12 @@ public sealed class MembershipConfiguration : IEntityTypeConfiguration<Membershi
             .HasConversion<string>()
             .HasMaxLength(20)
             .IsRequired();
+
+        builder.HasOne<MembershipPlan>()
+            .WithMany()
+            .HasForeignKey(x => x.MembershipPlanId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(x => x.MembershipPlanId);
     }
 }

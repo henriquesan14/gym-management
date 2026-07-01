@@ -40,11 +40,6 @@ public sealed class PaymentConfiguration : IEntityTypeConfiguration<Payment>
             .HasMaxLength(30)
             .IsRequired();
 
-        builder.Property(x => x.Status)
-            .HasConversion<string>()
-            .HasMaxLength(30)
-            .IsRequired();
-
         builder.Property(x => x.PaidAt);
 
         builder.Property(x => x.TransactionId)
@@ -53,8 +48,6 @@ public sealed class PaymentConfiguration : IEntityTypeConfiguration<Payment>
         builder.HasIndex(x => x.MemberId);
 
         builder.HasIndex(x => x.MembershipId);
-
-        builder.HasIndex(x => x.Status);
 
         builder.HasIndex(x => x.CreatedAt);
 

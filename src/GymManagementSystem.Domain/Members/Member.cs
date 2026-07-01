@@ -1,6 +1,7 @@
 ﻿using GymManagementSystem.Domain.Abstractions;
 using GymManagementSystem.Domain.Events;
 using GymManagementSystem.Domain.Exceptions;
+using GymManagementSystem.Domain.MembershipPlans;
 using GymManagementSystem.Domain.ValueObjects;
 
 namespace GymManagementSystem.Domain.Members;
@@ -18,6 +19,8 @@ public sealed class Member : Aggregate<MemberId>, IAuditableEntity
 
     public IReadOnlyCollection<CheckIn> CheckIns => _checkIns.AsReadOnly();
 
+    public bool HasActiveMembership => _memberships.Any(m => m.IsActive);
+
     private Member()
     {
     }
@@ -33,8 +36,8 @@ public sealed class Member : Aggregate<MemberId>, IAuditableEntity
     }
 
     public Membership CreateMembership(
-        DateOnly startDate,
-        int durationInMonths)
+        MembershipPlan plan,
+        DateOnly startDate)
     {
         if (_memberships.Any(x => x.IsActive))
             throw new DomainException(
@@ -42,8 +45,9 @@ public sealed class Member : Aggregate<MemberId>, IAuditableEntity
 
         var membership = new Membership(
             MembershipId.New(),
+            plan.Id,
             startDate,
-            startDate.AddMonths(durationInMonths));
+            startDate.AddDays(plan.DurationInDays));
 
         _memberships.Add(membership);
 
@@ -83,13 +87,15 @@ public sealed class Member : Aggregate<MemberId>, IAuditableEntity
             membership.Id));
     }
 
-    public void RenewMembership(int months)
+    public Membership RenewMembership(MembershipPlan membershipPlan)
     {
         var membership = GetActiveMembership();
 
         if (membership is null) throw new DomainException("There are no Active Membership");
 
-        membership.Renew(months);
+        membership.Renew(membershipPlan);
+
+        return membership;
     }
 
     public void CancelMembership(MembershipId membershipId)

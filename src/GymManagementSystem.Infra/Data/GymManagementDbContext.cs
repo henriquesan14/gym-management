@@ -1,4 +1,6 @@
 ﻿using GymManagementSystem.Domain.Members;
+using GymManagementSystem.Domain.MembershipPlans;
+using GymManagementSystem.Domain.Payments;
 using GymManagementSystem.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -17,6 +19,8 @@ public sealed class GymManagementDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<CheckIn> CheckIns => Set<CheckIn>();
+    public DbSet<MembershipPlan> MembershipPlans => Set<MembershipPlan>();
+    public DbSet<Payment> Payments => Set<Payment>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

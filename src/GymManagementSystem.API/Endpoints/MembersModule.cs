@@ -1,13 +1,10 @@
 ﻿using Carter;
 using FluentValidation;
 using GymManagementSystem.API.Extensions;
-using GymManagementSystem.API.Requests;
 using GymManagementSystem.Application.Members.Commands.CancelMembership;
 using GymManagementSystem.Application.Members.Commands.CheckIn;
 using GymManagementSystem.Application.Members.Commands.CreateMember;
-using GymManagementSystem.Application.Members.Commands.CreateMembership;
 using GymManagementSystem.Application.Members.Commands.DeleteMember;
-using GymManagementSystem.Application.Members.Commands.RenewMembership;
 using GymManagementSystem.Application.Members.Queries.GetMemberMembership;
 using GymManagementSystem.Application.Members.Queries.GetMembers;
 using MediatR;
@@ -23,8 +20,6 @@ public sealed class MemberModule : ICarterModule
         group.MapPost("/", Create);
         group.MapGet("/", Get);
         group.MapDelete("/{id}", Delete);
-        group.MapPost("/{memberId}/memberships", CreateMembership);
-        group.MapPost("/{memberId}/memberships/renew", RenewMembership);
         group.MapPost("/{memberId}/memberships/{membershipId}/cancel", CancelMembership);
         group.MapGet("/{memberId}/memberships/", GetMemberMembership);
         group.MapPost("/{memberId}/checkins", CheckIn);
@@ -61,37 +56,6 @@ public sealed class MemberModule : ICarterModule
         CancellationToken ct)
     {
         var command = new DeleteMemberCommand(id);
-        var result = await sender.Send(command, ct);
-
-        return result.ToHttpResult();
-    }
-
-    private static async Task<IResult> CreateMembership(
-        Guid memberId,
-        CreateMembershipRequest request,
-        IValidator<CreateMembershipCommand> validator,
-        ISender sender,
-        CancellationToken ct)
-    {
-        var command = new CreateMembershipCommand(memberId, request.StartDate, request.DurationInMonths);
-        var validation = await validator.ValidateRequest(command, ct);
-
-        if (validation is not null)
-            return validation;
-
-        var result = await sender.Send(command, ct);
-
-        return result.ToHttpResult();
-    }
-
-    private static async Task<IResult> RenewMembership(
-        Guid memberId,
-        RenewMembershipRequest request,
-        ISender sender,
-        CancellationToken ct)
-    {
-        var command = new RenewMembershipCommand(memberId, request.Months);
-
         var result = await sender.Send(command, ct);
 
         return result.ToHttpResult();

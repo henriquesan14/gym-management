@@ -1,5 +1,7 @@
 using GymManagementSystem.Application.Auth;
 using GymManagementSystem.Application.Members;
+using GymManagementSystem.Application.MembershipPlans;
+using GymManagementSystem.Application.Payments;
 using GymManagementSystem.Application.Shared.Contracts;
 using GymManagementSystem.Application.Users;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -11,17 +13,23 @@ public sealed class UnitOfWork : IUnitOfWork, IAsyncDisposable
     private IDbContextTransaction? _transaction;
     private readonly GymManagementDbContext _dbContext;
 
-    public UnitOfWork(GymManagementDbContext dbContext, IMemberRepository members, IUserRepository users, IRefreshTokenRepository refreshTokens)
+    public UnitOfWork(GymManagementDbContext dbContext, IMemberRepository members, IUserRepository users, IRefreshTokenRepository refreshTokens, IMembershipPlanRepository membershipPlans, IPaymentRepository payments)
     {
         _dbContext = dbContext;
         Members = members;
         Users = users;
         RefreshTokens = refreshTokens;
+        MembershipPlans = membershipPlans;
+        Payments = payments;
     }
 
     public IMemberRepository Members { get; }
     public IUserRepository Users { get; }
     public IRefreshTokenRepository RefreshTokens { get; }
+
+    public IMembershipPlanRepository MembershipPlans { get; }
+
+    public IPaymentRepository Payments { get; }
 
     public async Task BeginTransaction(CancellationToken ct)
     {

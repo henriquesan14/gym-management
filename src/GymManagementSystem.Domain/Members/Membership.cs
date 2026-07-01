@@ -1,6 +1,6 @@
 ﻿using GymManagementSystem.Domain.Abstractions;
 using GymManagementSystem.Domain.Enums;
-using GymManagementSystem.Domain.Exceptions;
+using GymManagementSystem.Domain.MembershipPlans;
 
 namespace GymManagementSystem.Domain.Members;
 
@@ -9,6 +9,7 @@ public sealed class Membership : Entity<MembershipId>, IAuditableEntity
     public DateOnly StartDate { get; private set; }
     public DateOnly EndDate { get; private set; }
     public MembershipStatus Status { get; private set; }
+    public MembershipPlanId MembershipPlanId { get; private set; } = default!;
 
     public bool IsActive => Status == MembershipStatus.Active && EndDate >= DateOnly.FromDateTime(DateTime.Now);
 
@@ -18,10 +19,12 @@ public sealed class Membership : Entity<MembershipId>, IAuditableEntity
 
     internal Membership(
         MembershipId id,
+        MembershipPlanId membershipPlanId,
         DateOnly startDate,
         DateOnly endDate)
     {
         Id = id;
+        MembershipPlanId = membershipPlanId;
         StartDate = startDate;
         EndDate = endDate;
         Status = MembershipStatus.Active;
@@ -49,11 +52,12 @@ public sealed class Membership : Entity<MembershipId>, IAuditableEntity
         Status = MembershipStatus.Expired;
     }
 
-    public void Renew(int months)
+    public void Renew(MembershipPlan plan)
     {
-        if (Status == MembershipStatus.Cancelled || Status == MembershipStatus.Expired)
-            throw new DomainException("Cannot renew a cancelled/expired membership.");
+        MembershipPlanId = plan.Id;
+        EndDate = EndDate.AddDays(plan.DurationInDays);
 
-        EndDate = EndDate.AddMonths(months);
+        if (Status != MembershipStatus.Cancelled)
+            Status = MembershipStatus.Active;
     }
 }

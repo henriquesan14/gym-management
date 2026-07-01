@@ -1,5 +1,7 @@
 ﻿using GymManagementSystem.Application.Auth;
 using GymManagementSystem.Application.Members;
+using GymManagementSystem.Application.MembershipPlans;
+using GymManagementSystem.Application.Payments;
 using GymManagementSystem.Application.Shared.Contracts;
 using GymManagementSystem.Application.Users;
 using GymManagementSystem.Domain.Users.Contracts;
@@ -38,6 +40,8 @@ public static class DependencyInjection
         services.AddScoped<IMemberRepository, MemberRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IMembershipPlanRepository, MembershipPlanRepository>();
+        services.AddScoped<IPaymentRepository, PaymentRepository>();
 
         //Services
         services.AddScoped<ITokenService, TokenService>();
